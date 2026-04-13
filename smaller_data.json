@@ -1,0 +1,190 @@
+[
+  {
+    "prompt": "Analyze Reliance Industries for investment",
+    "response": "Company Overview\nReliance Industries operates across energy, petrochemicals, retail and telecom through Jio. It is a diversified conglomerate with strong market leadership in multiple segments.\nFinancials\nRevenue has grown from ~₹5.5L Cr to ₹9L Cr in 5 years. Net profit margin ~7-9%. Debt to equity ~0.4. ROE ~12%, ROCE ~10%. Strong but cyclical free cash flow. PE ~25 vs sector avg 20.\nManagement\nPromoter holding ~50%, negligible pledge. Strong execution track record.\nGrowth\nRetail and Jio driving ~15% earnings CAGR. Expansion into green energy.\nRisk\nEnergy price volatility, capital-heavy business.\nValuation\nSlightly overvalued vs peers. PEG ~1.5.\nVerdict\nHold for long term growth but limited near-term upside."
+  },
+  {
+    "prompt": "Analyze TCS for investment",
+    "response": "Company Overview\nTCS is India’s largest IT services exporter with global clientele and strong margins.\nFinancials\nRevenue CAGR ~10% over 5 years. Net margin ~20-22%. Debt-free. ROE ~40%, ROCE ~50%. Strong free cash flow. PE ~30 vs sector 25.\nManagement\nPromoter holding ~72%. No pledge. Strong governance.\nGrowth\nDigital services driving ~12% growth.\nRisk\nSlowdown in global IT spending.\nValuation\nPremium valuation. PEG ~2.\nVerdict\nQuality compounder but expensive."
+  },
+  {
+    "prompt": "Analyze HDFC Bank for investment",
+    "response": "Company Overview\nLeading private sector bank focused on retail and corporate lending with strong asset quality.\nFinancials\nLoan growth ~18% CAGR. Net NPA <1%. ROE ~16%. Debt-equity not relevant. PE ~20 vs sector 18.\nManagement\nPromoter holding low due to regulations. Strong management legacy.\nGrowth\nConsistent credit growth and merger synergies.\nRisk\nNIM pressure, regulatory changes.\nValuation\nFairly valued. PEG ~1.2.\nVerdict\nCore portfolio stock."
+  },
+  {
+    "prompt": "Analyze Infosys for investment",
+    "response": "Company Overview\nGlobal IT services firm specializing in digital transformation.\nFinancials\nRevenue CAGR ~9%. Margins ~19-21%. ROE ~30%. Debt-free. PE ~27.\nManagement\nPromoter ~13%. No pledge.\nGrowth\nModerate growth outlook.\nRisk\nClient spending slowdown.\nValuation\nFair to slightly expensive. PEG ~1.7.\nVerdict\nStable but not high growth."
+  },
+  {
+    "prompt": "Analyze ITC for investment",
+    "response": "Company Overview\nFMCG and cigarette major with diversified businesses.\nFinancials\nRevenue CAGR ~8%. Margins ~25%+. ROE ~28%. Strong FCF. PE ~22 vs FMCG 40.\nManagement\nPromoter ~0%. Institutional owned.\nGrowth\nFMCG segment growing ~12%.\nRisk\nRegulatory risks on tobacco.\nValuation\nUndervalued. PEG ~1.\nVerdict\nValue buy."
+  },
+  {
+    "prompt": "Analyze Larsen & Toubro for investment",
+    "response": "Company Overview\nInfrastructure and engineering giant with strong order book.\nFinancials\nRevenue CAGR ~12%. Margins ~8%. ROE ~14%. Debt/equity ~1.2.\nManagement\nPromoter ~0%. Professional management.\nGrowth\nInfra capex boom tailwinds.\nRisk\nExecution delays.\nValuation\nFair. PEG ~1.3.\nVerdict\nGood cyclical bet."
+  },
+  {
+    "prompt": "Analyze Asian Paints for investment",
+    "response": "Company Overview\nMarket leader in decorative paints.\nFinancials\nRevenue CAGR ~11%. Margins ~18%. ROE ~28%. PE ~60.\nManagement\nPromoter ~52%.\nGrowth\nSteady demand growth.\nRisk\nCompetition increasing.\nValuation\nExpensive. PEG ~3.\nVerdict\nAvoid fresh entry."
+  },
+  {
+    "prompt": "Analyze Bajaj Finance for investment",
+    "response": "Company Overview\nNBFC focused on retail lending.\nFinancials\nLoan CAGR ~25%. ROE ~20%. PE ~35.\nManagement\nPromoter ~55%.\nGrowth\nHigh growth visibility.\nRisk\nCredit risk.\nValuation\nPremium. PEG ~1.8.\nVerdict\nGrowth stock."
+  },
+  {
+    "prompt": "Analyze SBI for investment",
+    "response": "Company Overview\nLargest PSU bank with strong deposit franchise.\nFinancials\nROE ~15%. NPAs declining. PE ~10.\nManagement\nGovt owned.\nGrowth\nCredit growth improving.\nRisk\nPSU inefficiencies.\nValuation\nUndervalued. PEG ~0.8.\nVerdict\nValue buy."
+  },
+  {
+    "prompt": "Analyze Maruti Suzuki for investment",
+    "response": "Company Overview\nLargest passenger car manufacturer.\nFinancials\nRevenue CAGR ~10%. ROE ~15%. PE ~28.\nManagement\nPromoter ~56%.\nGrowth\nEV transition underway.\nRisk\nCompetition, margin pressure.\nValuation\nFair. PEG ~1.5.\nVerdict\nHold."
+  },
+  {
+    "prompt": "Analyze Sun Pharma for investment",
+    "response": "Company Overview\nLeading pharma company with global presence.\nFinancials\nRevenue CAGR ~9%. ROE ~14%. PE ~30.\nManagement\nPromoter ~54%.\nGrowth\nSpecialty drugs growth.\nRisk\nUSFDA issues.\nValuation\nFair. PEG ~1.4.\nVerdict\nSteady pick."
+  },
+  {
+    "prompt": "Analyze Tata Motors for investment",
+    "response": "Company Overview\nAuto major with JLR subsidiary.\nFinancials\nRevenue CAGR ~12%. Debt high. ROE improving. PE ~18.\nManagement\nPromoter ~46%.\nGrowth\nEV growth strong.\nRisk\nCyclical demand.\nValuation\nReasonable. PEG ~1.2.\nVerdict\nTurnaround play."
+  },
+  {
+    "prompt": "Analyze Wipro for investment",
+    "response": "Company Overview\nIT services company.\nFinancials\nRevenue CAGR ~7%. ROE ~18%. PE ~20.\nManagement\nPromoter ~73%.\nGrowth\nWeak vs peers.\nRisk\nExecution issues.\nValuation\nFair. PEG ~1.5.\nVerdict\nAvoid."
+  },
+  {
+    "prompt": "Analyze Hindustan Unilever for investment",
+    "response": "Company Overview\nFMCG leader.\nFinancials\nRevenue CAGR ~9%. ROE ~35%. PE ~55.\nManagement\nPromoter ~62%.\nGrowth\nStable consumption growth.\nRisk\nHigh valuation.\nValuation\nExpensive. PEG ~2.5.\nVerdict\nHold."
+  },
+  {
+    "prompt": "Analyze Adani Ports for investment",
+    "response": "Company Overview\nLargest port operator.\nFinancials\nRevenue CAGR ~15%. ROE ~18%. Debt moderate.\nManagement\nPromoter ~65%.\nGrowth\nLogistics expansion.\nRisk\nGroup risk.\nValuation\nFair. PEG ~1.3.\nVerdict\nHold."
+  },
+  {
+    "prompt": "Analyze NTPC for investment",
+    "response": "Company Overview\nLargest power generation PSU.\nFinancials\nStable revenue. ROE ~12%. PE ~10.\nManagement\nGovt owned.\nGrowth\nRenewables push.\nRisk\nRegulatory risks.\nValuation\nCheap. PEG ~0.9.\nVerdict\nIncome stock."
+  },
+  {
+    "prompt": "Analyze JSW Steel for investment",
+    "response": "Company Overview\nSteel manufacturer.\nFinancials\nCyclical profits. ROE ~15%. PE ~12.\nManagement\nPromoter ~45%.\nGrowth\nCapacity expansion.\nRisk\nCommodity volatility.\nValuation\nFair.\nVerdict\nCyclical bet."
+  },
+  {
+    "prompt": "Analyze Bharti Airtel for investment",
+    "response": "Company Overview\nTelecom operator.\nFinancials\nRevenue CAGR ~14%. ROE improving. PE ~35.\nManagement\nPromoter ~57%.\nGrowth\nARPU growth.\nRisk\nDebt.\nValuation\nPremium.\nVerdict\nHold."
+  },
+  {
+    "prompt": "Analyze HCL Tech for investment",
+    "response": "Company Overview\nIT services firm.\nFinancials\nRevenue CAGR ~10%. ROE ~22%. PE ~25.\nManagement\nPromoter ~60%.\nGrowth\nStable.\nRisk\nIT slowdown.\nValuation\nFair.\nVerdict\nHold."
+  },
+  {
+    "prompt": "Analyze Dr Reddy's Labs for investment",
+    "response": "Company Overview\nPharma exporter.\nFinancials\nRevenue CAGR ~8%. ROE ~13%. PE ~22.\nManagement\nPromoter ~27%.\nGrowth\nModerate.\nRisk\nRegulatory.\nValuation\nFair.\nVerdict\nHold."
+  },
+  {
+    "prompt": "Analyze Power Grid for investment",
+    "response": "Company Overview\nPower transmission PSU.\nFinancials\nStable ROE ~20%. PE ~12.\nManagement\nGovt owned.\nGrowth\nInfra push.\nRisk\nRegulation.\nValuation\nCheap.\nVerdict\nDividend play."
+  },
+  {
+    "prompt": "Analyze Titan Company for investment",
+    "response": "Company Overview\nJewelry and lifestyle brand leader.\nFinancials\nRevenue CAGR ~15%. ROE ~25%. PE ~70.\nManagement\nPromoter ~52%.\nGrowth\nStrong brand.\nRisk\nHigh valuation.\nValuation\nExpensive.\nVerdict\nAvoid fresh entry."
+  },
+  {
+    "prompt": "Analyze UltraTech Cement for investment",
+    "response": "Company Overview\nLargest cement company.\nFinancials\nRevenue CAGR ~12%. ROE ~15%. PE ~35.\nManagement\nPromoter ~60%.\nGrowth\nInfra demand.\nRisk\nCost inflation.\nValuation\nFair.\nVerdict\nHold."
+  },
+  {
+    "prompt": "Analyze Grasim Industries for investment",
+    "response": "Company Overview\nDiversified manufacturing.\nFinancials\nModerate growth. ROE ~10%. PE ~20.\nManagement\nPromoter ~44%.\nGrowth\nPaint entry.\nRisk\nExecution.\nValuation\nFair.\nVerdict\nWatch."
+  },
+  {
+    "prompt": "Analyze Eicher Motors for investment",
+    "response": "Company Overview\nRoyal Enfield maker.\nFinancials\nRevenue CAGR ~11%. ROE ~22%. PE ~35.\nManagement\nPromoter ~49%.\nGrowth\nPremium bikes.\nRisk\nDemand slowdown.\nValuation\nPremium.\nVerdict\nHold."
+  },
+  {
+    "prompt": "Analyze Cipla for investment",
+    "response": "Company Overview\nPharma company.\nFinancials\nRevenue CAGR ~9%. ROE ~14%. PE ~25.\nManagement\nPromoter ~33%.\nGrowth\nModerate.\nRisk\nRegulatory.\nValuation\nFair.\nVerdict\nHold."
+  },
+  {
+    "prompt": "Analyze Coal India for investment",
+    "response": "Company Overview\nCoal mining PSU.\nFinancials\nHigh cash flows. ROE ~30%. PE ~8.\nManagement\nGovt owned.\nGrowth\nLimited.\nRisk\nEnergy transition.\nValuation\nCheap.\nVerdict\nDividend play."
+  },
+  {
+    "prompt": "Analyze IndusInd Bank for investment",
+    "response": "Company Overview\nPrivate bank.\nFinancials\nROE ~14%. PE ~12.\nManagement\nPromoter ~15%.\nGrowth\nModerate.\nRisk\nAsset quality.\nValuation\nCheap.\nVerdict\nValue bet."
+  },
+  {
+    "prompt": "Analyze Hero MotoCorp for investment",
+    "response": "Company Overview\nTwo-wheeler leader.\nFinancials\nRevenue flat. ROE ~18%. PE ~20.\nManagement\nPromoter ~34%.\nGrowth\nSlow.\nRisk\nEV disruption.\nValuation\nFair.\nVerdict\nAvoid."
+  },
+  {
+    "prompt": "Analyze Britannia for investment",
+    "response": "Company Overview\nFMCG food company.\nFinancials\nRevenue CAGR ~10%. ROE ~40%. PE ~50.\nManagement\nPromoter ~50%.\nGrowth\nStable.\nRisk\nHigh valuation.\nValuation\nExpensive.\nVerdict\nHold."
+  },
+  {
+    "prompt": "Analyze Nestle India for investment",
+    "response": "Company Overview\nPremium FMCG.\nFinancials\nRevenue CAGR ~11%. ROE ~90%. PE ~70.\nManagement\nPromoter ~63%.\nGrowth\nStrong.\nRisk\nValuation.\nValuation\nExpensive.\nVerdict\nAvoid fresh entry."
+  },
+  {
+    "prompt": "Analyze Vedanta for investment",
+    "response": "Company Overview\nDiversified metals.\nFinancials\nCyclical. High debt. PE ~10.\nManagement\nPromoter ~69%.\nGrowth\nCommodity driven.\nRisk\nDebt.\nValuation\nCheap.\nVerdict\nHigh risk."
+  },
+  {
+    "prompt": "Analyze Dabur for investment",
+    "response": "Company Overview\nFMCG ayurvedic products.\nFinancials\nRevenue CAGR ~9%. ROE ~20%. PE ~45.\nManagement\nPromoter ~67%.\nGrowth\nModerate.\nRisk\nCompetition.\nValuation\nExpensive.\nVerdict\nHold."
+  },
+  {
+    "prompt": "Analyze Siemens India for investment",
+    "response": "Company Overview\nIndustrial automation.\nFinancials\nRevenue CAGR ~12%. ROE ~18%. PE ~60.\nManagement\nPromoter ~75%.\nGrowth\nCapex cycle.\nRisk\nValuation.\nValuation\nExpensive.\nVerdict\nHold."
+  },
+  {
+    "prompt": "Analyze Bosch India for investment",
+    "response": "Company Overview\nAuto components.\nFinancials\nRevenue CAGR ~8%. ROE ~15%. PE ~40.\nManagement\nPromoter ~70%.\nGrowth\nEV transition.\nRisk\nAuto slowdown.\nValuation\nPremium.\nVerdict\nHold."
+  },
+  {
+    "prompt": "Analyze Aurobindo Pharma for investment",
+    "response": "Company Overview\nGeneric pharma.\nFinancials\nRevenue CAGR ~7%. ROE ~12%. PE ~15.\nManagement\nPromoter ~52%.\nGrowth\nModerate.\nRisk\nUSFDA.\nValuation\nFair.\nVerdict\nHold."
+  },
+  {
+    "prompt": "Analyze Godrej Consumer for investment",
+    "response": "Company Overview\nFMCG.\nFinancials\nRevenue CAGR ~8%. ROE ~18%. PE ~45.\nManagement\nPromoter ~63%.\nGrowth\nModerate.\nRisk\nValuation.\nValuation\nExpensive.\nVerdict\nHold."
+  },
+  {
+    "prompt": "Analyze Page Industries for investment",
+    "response": "Company Overview\nInnerwear brand Jockey India.\nFinancials\nRevenue CAGR ~12%. ROE ~40%. PE ~70.\nManagement\nPromoter ~46%.\nGrowth\nStrong.\nRisk\nValuation.\nValuation\nExpensive.\nVerdict\nAvoid."
+  },
+  {
+    "prompt": "Analyze ACC for investment",
+    "response": "Company Overview\nCement player.\nFinancials\nRevenue CAGR ~10%. ROE ~12%. PE ~30.\nManagement\nPromoter ~57%.\nGrowth\nInfra demand.\nRisk\nCosts.\nValuation\nFair.\nVerdict\nHold."
+  },
+  {
+    "prompt": "Analyze Ambuja Cements for investment",
+    "response": "Company Overview\nCement manufacturer.\nFinancials\nModerate growth. ROE ~11%. PE ~35.\nManagement\nPromoter ~63%.\nGrowth\nCapex.\nRisk\nCosts.\nValuation\nFair.\nVerdict\nHold."
+  },
+  {
+    "prompt": "Analyze Havells India for investment",
+    "response": "Company Overview\nElectrical goods.\nFinancials\nRevenue CAGR ~13%. ROE ~20%. PE ~60.\nManagement\nPromoter ~60%.\nGrowth\nStrong.\nRisk\nValuation.\nValuation\nExpensive.\nVerdict\nHold."
+  },
+  {
+    "prompt": "Analyze Voltas for investment",
+    "response": "Company Overview\nAC and engineering.\nFinancials\nRevenue CAGR ~9%. ROE ~13%. PE ~45.\nManagement\nPromoter ~30%.\nGrowth\nSeasonal.\nRisk\nCompetition.\nValuation\nExpensive.\nVerdict\nAvoid."
+  },
+  {
+    "prompt": "Analyze LIC Housing Finance for investment",
+    "response": "Company Overview\nHousing finance NBFC.\nFinancials\nROE ~14%. PE ~8.\nManagement\nPromoter LIC.\nGrowth\nModerate.\nRisk\nInterest rates.\nValuation\nCheap.\nVerdict\nValue pick."
+  },
+  {
+    "prompt": "Analyze IRCTC for investment",
+    "response": "Company Overview\nRailway ticketing monopoly.\nFinancials\nHigh margins. ROE ~35%. PE ~50.\nManagement\nGovt.\nGrowth\nModerate.\nRisk\nRegulation.\nValuation\nExpensive.\nVerdict\nHold."
+  },
+  {
+    "prompt": "Analyze Zomato for investment",
+    "response": "Company Overview\nFood delivery platform.\nFinancials\nRevenue growth high, profits volatile. PE NA.\nManagement\nPromoter low.\nGrowth\nHigh.\nRisk\nProfitability.\nValuation\nExpensive.\nVerdict\nHigh risk bet."
+  },
+  {
+    "prompt": "Analyze Paytm for investment",
+    "response": "Company Overview\nFintech platform.\nFinancials\nLoss making. Revenue growth high.\nManagement\nPromoter low.\nGrowth\nHigh.\nRisk\nRegulation.\nValuation\nUncertain.\nVerdict\nAvoid."
+  },
+  {
+    "prompt": "Analyze Adani Green for investment",
+    "response": "Company Overview\nRenewable energy.\nFinancials\nHigh growth, high debt. PE high.\nManagement\nPromoter high.\nGrowth\nStrong.\nRisk\nDebt.\nValuation\nExpensive.\nVerdict\nHigh risk."
+  }
+]
