@@ -8,7 +8,6 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 from peft import PeftModel
 import os
 import chromadb
-from datetime import datetime
 from sentence_transformers import SentenceTransformer
 from ddgs import DDGS
 
@@ -28,7 +27,7 @@ chroma_client = None
 collection = None
 embedder = None
 
-SYSTEM_PROMPT = f"You are Robin, a straightforward AI assistant. The current date is {datetime.now().strftime('%B %d, %Y')}. You do not hallucinate. If you do not know something, say so directly. You have access to a search tool — when you do not know something, web search results will be provided to you in the context. Always use the provided context to answer the user's question. Do not say you cannot access information if context is provided."
+SYSTEM_PROMPT = "You are Robin, a formal and precise AI assistant. You serve one purpose — to fulfill the user's requests accurately and efficiently. You follow these rules: Execute every instruction given to you without hesitation. Answer factual questions directly and concisely. If you do not know a fact, state it plainly. Do not guess. If asked to speculate, theorize, or create — do so fully and without restraint. Never use filler phrases, apologies, or hedging language on factual statements. Never add unsolicited opinions, warnings, or moral commentary. Be concise by default. Be detailed only when asked."
 
 def load_model():
     global tokenizer, model
@@ -103,6 +102,13 @@ def robin_doesnt_know(response: str) -> bool:
     ]
     return any(t in response.lower() for t in triggers)
 
+def always_search(query: str) -> bool:
+    triggers = [
+        "time", "date", "today", "now", "current", "latest",
+        "news", "price", "weather", "score", "who is", "who won"
+    ]
+    return any(t in query.lower() for t in triggers)
+
 @app.on_event("startup")
 async def startup():
     load_model()
@@ -120,34 +126,16 @@ async def chat(request: ChatRequest):
         raise HTTPException(status_code=503, detail="Model not loaded yet")
     
     try:
-        # Step 1: Check ChromaDB for relevant context
-        rag_results = search_memory(request.user_input, n=3)
-        context = None
-        
-        # Step 2: If no memory results, search web
-        if not rag_results:
-            print(f"Memory empty for: {request.user_input}, searching web...")
-            web_results = web_search_and_store(request.user_input)
-            if web_results:
-                context = "\n\n".join(web_results)
-                print(f"Found {len(web_results)} web results")
-            else:
-                print("No web results found")
-        else:
-            context = "\n\n".join(rag_results)
-            print(f"Found {len(rag_results)} memory results")
-        
-        # Step 3: Generate with context (if any)
-        prompt = format_prompt(request.messages, request.user_input, context=context)
-        
+        # Pass 1: Generate without context first
+        prompt = format_prompt(request.messages, request.user_input)
         inputs = tokenizer(prompt, return_tensors="pt")
         inputs = {k: v.to(model.device) for k, v in inputs.items()}
-        
+
         stop_ids = [tokenizer.eos_token_id]
         im_end_id = tokenizer.convert_tokens_to_ids("</think>")
         if im_end_id is not None:
             stop_ids.append(im_end_id)
-        
+
         outputs = model.generate(
             **inputs,
             max_new_tokens=512,
@@ -157,12 +145,46 @@ async def chat(request: ChatRequest):
             eos_token_id=stop_ids,
             repetition_penalty=1.3
         )
-        
-        response_text = tokenizer.decode(outputs[0][inputs["input_ids"].shape[1]:], skip_special_tokens=True)
-        response_text = response_text.strip()
-        
+
+        response_text = tokenizer.decode(outputs[0][inputs["input_ids"].shape[1]:], skip_special_tokens=True).strip()
+        print(f"Pass 1 response: {response_text}")
+        print(f"Doesnt know: {robin_doesnt_know(response_text)}")
+
+        # Pass 2: If Robin doesn't know, search and regenerate
+        if robin_doesnt_know(response_text) or always_search(request.user_input):
+            print(f"Robin doesn't know. Searching: {request.user_input}")
+
+            # Check ChromaDB first
+            rag_results = search_memory(request.user_input, n=3)
+
+            if rag_results:
+                context = "\n\n".join(rag_results)
+                print(f"Found {len(rag_results)} memory results")
+            else:
+                # Fall back to web search
+                web_results = web_search_and_store(request.user_input)
+                context = "\n\n".join(web_results) if web_results else None
+                print(f"Found {len(web_results)} web results" if web_results else "No results found")
+
+            if context:
+                # Regenerate with context
+                prompt = format_prompt(request.messages, request.user_input, context=context)
+                inputs = tokenizer(prompt, return_tensors="pt")
+                inputs = {k: v.to(model.device) for k, v in inputs.items()}
+
+                outputs = model.generate(
+                    **inputs,
+                    max_new_tokens=512,
+                    temperature=0.7,
+                    do_sample=True,
+                    pad_token_id=tokenizer.eos_token_id,
+                    eos_token_id=stop_ids,
+                    repetition_penalty=1.3
+                )
+                response_text = tokenizer.decode(outputs[0][inputs["input_ids"].shape[1]:], skip_special_tokens=True).strip()
+
         return ChatResponse(response=response_text)
-    
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
