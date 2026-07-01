@@ -1,1 +1,1 @@
-This project is being rebuild.
+This project is being rebuilt.
