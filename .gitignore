@@ -1,4 +1,26 @@
-qwen3-stock-advisor/
+# Python
 __pycache__/
 *.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+
+# Virtual environment
 .venv/
+
+# Environment variables
+.env
+
+# Training artifacts
+checkpoints/
+adapters/
+data/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
