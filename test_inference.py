@@ -24,7 +24,7 @@ model = AutoModelForCausalLM.from_pretrained(
     trust_remote_code=True,
 )
 
-prompt = "write something about the transformers models in short"
+prompt = "hi"
 inputs = tokenizer(prompt, return_tensors="pt").to("cuda")
 
 with torch.no_grad():
