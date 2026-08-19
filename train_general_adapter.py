@@ -1,26 +1,34 @@
-import os
-import json
+"""Training script for LoRA adapters."""
+
 import glob
+import json
+import os
+
 import torch
+from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training
 from torch.nn.utils.rnn import pad_sequence
 from transformers import (
     AutoModelForCausalLM,
     AutoTokenizer,
     BitsAndBytesConfig,
-    TrainingArguments,
     Trainer,
+    TrainingArguments,
 )
-from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training
 
-model_name = "microsoft/phi-2"
+from src.config import (
+    CHECKPOINTS_DIR,
+    LORA_CONFIG,
+    MODEL_NAME,
+    TRAIN_CONFIG,
+)
+
 adapter_save_path = "adapters/general_adapter"
 train_data_path = "data/general_adapter_train/train.jsonl"
 eval_data_path = "data/general_adapter_train/eval.jsonl"
-checkpoint_dir = "checkpoints"
-max_length = 512
+max_length = TRAIN_CONFIG["max_length"]
 
 os.makedirs("adapters", exist_ok=True)
-os.makedirs(checkpoint_dir, exist_ok=True)
+os.makedirs(str(CHECKPOINTS_DIR), exist_ok=True)
 
 quant_config = BitsAndBytesConfig(
     load_in_4bit=True,
@@ -29,11 +37,11 @@ quant_config = BitsAndBytesConfig(
     bnb_4bit_quant_type="nf4",
 )
 
-tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
+tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME, trust_remote_code=True)
 tokenizer.pad_token = tokenizer.eos_token
 
 model = AutoModelForCausalLM.from_pretrained(
-    model_name,
+    MODEL_NAME,
     quantization_config=quant_config,
     device_map="auto",
     trust_remote_code=True,
@@ -43,16 +51,17 @@ model = prepare_model_for_kbit_training(model)
 model.gradient_checkpointing_enable()
 
 lora_config = LoraConfig(
-    r=16,
-    lora_alpha=32,
-    target_modules=["Wqkv", "out_proj", "fc1", "fc2"],
-    lora_dropout=0.05,
-    bias="none",
-    task_type="CAUSAL_LM",
+    r=LORA_CONFIG["r"],
+    lora_alpha=LORA_CONFIG["lora_alpha"],
+    target_modules=LORA_CONFIG["target_modules"],
+    lora_dropout=LORA_CONFIG["lora_dropout"],
+    bias=LORA_CONFIG["bias"],
+    task_type=LORA_CONFIG["task_type"],
 )
 
 model = get_peft_model(model, lora_config)
 model.print_trainable_parameters()
+
 
 def load_jsonl(path):
     with open(path) as f:
@@ -60,8 +69,10 @@ def load_jsonl(path):
     lines.sort(key=lambda x: x["prompt"])
     return lines
 
+
 train_data = load_jsonl(train_data_path)
 eval_data = load_jsonl(eval_data_path)
+
 
 class TextDataset(torch.utils.data.Dataset):
     def __init__(self, data, tokenizer, max_length):
@@ -81,7 +92,7 @@ class TextDataset(torch.utils.data.Dataset):
         full_ids = self.tokenizer.encode(full_text)
 
         if len(full_ids) > self.max_length:
-            full_ids = full_ids[:self.max_length]
+            full_ids = full_ids[: self.max_length]
             labels = full_ids.copy()
             mask_end = min(prompt_len, self.max_length)
             for i in range(mask_end):
@@ -96,8 +107,10 @@ class TextDataset(torch.utils.data.Dataset):
             "labels": torch.tensor(labels, dtype=torch.long),
         }
 
+
 train_dataset = TextDataset(train_data, tokenizer, max_length)
 eval_dataset = TextDataset(eval_data, tokenizer, max_length)
+
 
 def collate_fn(features):
     input_ids = pad_sequence(
@@ -113,24 +126,25 @@ def collate_fn(features):
     attention_mask = (input_ids != tokenizer.pad_token_id).long()
     return {"input_ids": input_ids, "labels": labels, "attention_mask": attention_mask}
 
+
 training_args = TrainingArguments(
-    output_dir=checkpoint_dir,
-    per_device_train_batch_size=2,
-    per_device_eval_batch_size=2,
-    gradient_accumulation_steps=4,
-    num_train_epochs=2,
-    learning_rate=2e-4,
-    lr_scheduler_type="cosine",
-    warmup_ratio=0.03,
-    logging_steps=10,
-    eval_steps=200,
-    save_steps=500,
-    save_total_limit=2,
-    eval_strategy="steps",
+    output_dir=str(CHECKPOINTS_DIR),
+    per_device_train_batch_size=TRAIN_CONFIG["per_device_train_batch_size"],
+    per_device_eval_batch_size=TRAIN_CONFIG["per_device_eval_batch_size"],
+    gradient_accumulation_steps=TRAIN_CONFIG["gradient_accumulation_steps"],
+    num_train_epochs=TRAIN_CONFIG["num_train_epochs"],
+    learning_rate=TRAIN_CONFIG["learning_rate"],
+    lr_scheduler_type=TRAIN_CONFIG["lr_scheduler_type"],
+    warmup_ratio=TRAIN_CONFIG["warmup_ratio"],
+    logging_steps=TRAIN_CONFIG["logging_steps"],
+    eval_steps=TRAIN_CONFIG["eval_steps"],
+    save_steps=TRAIN_CONFIG["save_steps"],
+    save_total_limit=TRAIN_CONFIG["save_total_limit"],
+    eval_strategy=TRAIN_CONFIG["eval_strategy"],
     bf16=torch.cuda.is_available(),
-    dataloader_num_workers=2,
-    remove_unused_columns=False,
-    report_to="none",
+    dataloader_num_workers=TRAIN_CONFIG["dataloader_num_workers"],
+    remove_unused_columns=TRAIN_CONFIG["remove_unused_columns"],
+    report_to=TRAIN_CONFIG["report_to"],
 )
 
 trainer = Trainer(
@@ -142,7 +156,7 @@ trainer = Trainer(
 )
 
 checkpoints = sorted(
-    glob.glob(os.path.join(checkpoint_dir, "checkpoint-*")),
+    glob.glob(os.path.join(str(CHECKPOINTS_DIR), "checkpoint-*")),
     key=lambda x: int(x.split("-")[-1]),
 )
 resume = checkpoints[-1] if checkpoints else None

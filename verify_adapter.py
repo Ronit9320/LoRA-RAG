@@ -1,32 +1,13 @@
+"""Quick verification of the trained adapter."""
+
 import torch
-from transformers import (
-    AutoModelForCausalLM,
-    AutoTokenizer,
-    BitsAndBytesConfig,
-)
-from peft import PeftModel
 
-model_name = "microsoft/phi-2"
-adapter_path = "adapters/general_adapter"
+from src.config import DEFAULT_ADAPTER
+from src.model import load_adapter, load_base_model, load_tokenizer
 
-quant_config = BitsAndBytesConfig(
-    load_in_4bit=True,
-    bnb_4bit_compute_dtype=torch.float16,
-    bnb_4bit_use_double_quant=True,
-    bnb_4bit_quant_type="nf4",
-)
-
-tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
-tokenizer.pad_token = tokenizer.eos_token
-
-base_model = AutoModelForCausalLM.from_pretrained(
-    model_name,
-    quantization_config=quant_config,
-    device_map="auto",
-    trust_remote_code=True,
-)
-
-model = PeftModel.from_pretrained(base_model, adapter_path)
+tokenizer = load_tokenizer()
+base_model = load_base_model()
+model = load_adapter(base_model, str(DEFAULT_ADAPTER))
 
 prompts = [
     "Instruct: Explain the difference between gradient descent and stochastic gradient descent, including when you would prefer one over the other.\nOutput:",

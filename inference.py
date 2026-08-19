@@ -1,73 +1,138 @@
+"""Gradio chat interface with multi-adapter switching and RAG context."""
+
 import argparse
 
-import torch
 import gradio as gr
-from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
-from peft import PeftModel
 
-MODEL_NAME = "microsoft/phi-2"
-DEFAULT_ADAPTER = "adapters/general_adapter"
-
-
-def load_model(adapter_path: str):
-    quant_config = BitsAndBytesConfig(
-        load_in_4bit=True,
-        bnb_4bit_compute_dtype=torch.float16,
-        bnb_4bit_use_double_quant=True,
-        bnb_4bit_quant_type="nf4",
-    )
-
-    tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME, trust_remote_code=True)
-    tokenizer.pad_token = tokenizer.eos_token
-
-    base_model = AutoModelForCausalLM.from_pretrained(
-        MODEL_NAME,
-        quantization_config=quant_config,
-        device_map="auto",
-        trust_remote_code=True,
-    )
-    model = PeftModel.from_pretrained(base_model, adapter_path)
-    model.eval()
-
-    return model, tokenizer
+from src.config import ADAPTER_REGISTRY, INFERENCE_CONFIG
+from src.inference import MultiAdapterModel
+from src.rag import RAGPipeline
+from src.switch import SwitchManager
 
 
-def make_generate(model, tokenizer):
-    def generate(message: str, history: list, max_new_tokens: int, temperature: float, top_p: float) -> str:
-        prompt = f"Instruct: {message}\nOutput:"
-        inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
-        with torch.no_grad():
-            outputs = model.generate(
-                **inputs,
-                max_new_tokens=max_new_tokens,
-                do_sample=True,
-                temperature=temperature,
-                top_p=top_p,
+def build_ui(switch_mgr: SwitchManager) -> gr.Blocks:
+    """Build the Gradio UI with adapter switching and RAG controls."""
+    all_tasks = switch_mgr.all_tasks
+
+    with gr.Blocks(title="Robin LoRA") as demo:
+        gr.Markdown("# Robin LoRA")
+        gr.Markdown("Phi-2.7B + general adapter + task adapter (multi-adapter with RAG)")
+
+        with gr.Row():
+            with gr.Column(scale=3):
+                chatbot = gr.Chatbot(label="Chat", height=400)
+                msg = gr.Textbox(label="Message", placeholder="Type a message...")
+                with gr.Row():
+                    send_btn = gr.Button("Send", variant="primary")
+                    switch_btn = gr.Button("Switch Task", variant="secondary")
+
+            with gr.Column(scale=1):
+                task_dropdown = gr.Dropdown(
+                    choices=all_tasks,
+                    value="general",
+                    label="Task adapter",
+                    info="General is always active",
+                )
+                status_text = gr.Textbox(label="Status", lines=5, interactive=False)
+                rag_count = gr.Number(label="RAG entries indexed", value=0, interactive=False)
+                with gr.Accordion("Generation settings", open=False):
+                    max_tokens = gr.Slider(64, 512, value=INFERENCE_CONFIG["max_new_tokens"], step=64, label="Max tokens")
+                    temperature = gr.Slider(0.1, 2.0, value=INFERENCE_CONFIG["temperature"], step=0.1, label="Temperature")
+                    top_p = gr.Slider(0.1, 1.0, value=INFERENCE_CONFIG["top_p"], step=0.05, label="Top-p")
+
+        def user_message(user_msg, chat_history):
+            """Append user message to chat and clear input."""
+            chat_history.append({"role": "user", "content": user_msg})
+            return "", chat_history
+
+        def respond(chat_history, task, max_tok, temp, top):
+            """Generate a response with the current adapter."""
+            if not chat_history:
+                return chat_history, switch_mgr.status()
+
+            last_user_msg = chat_history[-1]["content"]
+            response = switch_mgr.model.chat(last_user_msg, max_tok, temp, top)
+            chat_history.append({"role": "assistant", "content": response})
+            return chat_history, switch_mgr.status()
+
+        def switch_task(chat_history, new_task, max_tok, temp, top):
+            """Switch adapter: index last output, load new adapter, show context."""
+            if not chat_history:
+                gr.Warning("No conversation to index. Switching adapter only.")
+                switch_mgr.model.activate_task(new_task)
+                return chat_history, switch_mgr.status(), switch_mgr.rag.store.size
+
+            # Find the last user-assistant pair
+            last_user_msg = None
+            last_response = None
+            for msg in reversed(chat_history):
+                if msg["role"] == "assistant" and last_response is None:
+                    last_response = msg["content"]
+                elif msg["role"] == "user" and last_user_msg is None:
+                    last_user_msg = msg["content"]
+                if last_user_msg and last_response:
+                    break
+
+            if not last_user_msg or not last_response:
+                switch_mgr.model.activate_task(new_task)
+                return chat_history, switch_mgr.status(), switch_mgr.rag.store.size
+
+            # Index and switch
+            result = switch_mgr.generate_and_switch(
+                last_user_msg, new_task, max_tok, temp, top
             )
-        response = tokenizer.decode(outputs[0], skip_special_tokens=True)
-        response = response[len(prompt):].strip()
-        return response
 
-    return generate
+            # Add system message showing the switch
+            if result["context_retrieved"] > 0:
+                context_info = (
+                    f"[Switched from {result['old_task']} -> {result['new_task']}. "
+                    f"{result['context_retrieved']} context entries retrieved from RAG.]"
+                )
+            else:
+                context_info = (
+                    f"[Switched from {result['old_task']} -> {result['new_task']}. "
+                    f"No prior context found in RAG.]"
+                )
+
+            chat_history.append({"role": "assistant", "content": context_info})
+            return chat_history, switch_mgr.status(), switch_mgr.rag.store.size
+
+        # Wire up events
+        msg.submit(user_message, [msg, chatbot], [msg, chatbot]).then(
+            respond, [chatbot, task_dropdown, max_tokens, temperature, top_p], [chatbot, status_text]
+        )
+        send_btn.click(user_message, [msg, chatbot], [msg, chatbot]).then(
+            respond, [chatbot, task_dropdown, max_tokens, temperature, top_p], [chatbot, status_text]
+        )
+        switch_btn.click(
+            switch_task,
+            [chatbot, task_dropdown, max_tokens, temperature, top_p],
+            [chatbot, status_text, rag_count],
+        )
+
+    return demo
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--adapter", default=DEFAULT_ADAPTER, help="Adapter path or HuggingFace model ID")
+    parser.add_argument(
+        "--task",
+        default="general",
+        choices=list(ADAPTER_REGISTRY.keys()),
+        help="Initial task adapter to load",
+    )
     parser.add_argument("--share", action="store_true", help="Create a public Gradio link")
     args = parser.parse_args()
 
-    model, tokenizer = load_model(args.adapter)
-    fn = make_generate(model, tokenizer)
+    model = MultiAdapterModel()
+    rag = RAGPipeline()
+    switch_mgr = SwitchManager(model, rag)
 
-    demo = gr.ChatInterface(
-        fn=fn,
-        title="Robin LoRA",
-        description=f"Phi-2.7B + adapter: {args.adapter}",
-        additional_inputs=[
-            gr.Slider(64, 512, value=256, step=64, label="Max new tokens"),
-            gr.Slider(0.1, 2.0, value=0.7, step=0.1, label="Temperature"),
-            gr.Slider(0.1, 1.0, value=0.9, step=0.05, label="Top-p"),
-        ],
-    )
+    print(switch_mgr.start(args.task))
+    print()
+    for name, entry in ADAPTER_REGISTRY.items():
+        status = "trained" if entry["trained"] else "NOT trained (placeholder)"
+        print(f"  {name}: {entry['description']} [{status}]")
+
+    demo = build_ui(switch_mgr)
     demo.launch(share=args.share)

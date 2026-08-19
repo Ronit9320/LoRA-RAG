@@ -1,22 +1,24 @@
-import os
+"""Prepare training dataset from HuggingFace ultrachat_200k."""
+
 import json
-from datasets import load_dataset
+import os
 from random import Random
 
-seed = 42
-num_examples = 8000
-num_eval = 200
-num_train = num_examples - num_eval
+from datasets import load_dataset
 
-output_dir = "data/general_adapter_train"
+from src.config import DATA_DIR, DATASET_CONFIG
+
+output_dir = str(DATA_DIR / "general_adapter_train")
 os.makedirs(output_dir, exist_ok=True)
 
-ds = load_dataset("HuggingFaceH4/ultrachat_200k", split="train_sft")
+ds = load_dataset(DATASET_CONFIG["source"], split=DATASET_CONFIG["split"])
 
-rng = Random(seed)
+rng = Random(DATASET_CONFIG["seed"])
 indices = list(range(len(ds)))
 rng.shuffle(indices)
-indices = indices[:num_examples]
+indices = indices[: DATASET_CONFIG["num_examples"]]
+
+num_train = DATASET_CONFIG["num_examples"] - DATASET_CONFIG["num_eval"]
 
 train_processed = []
 eval_processed = []

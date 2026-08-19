@@ -1,32 +1,15 @@
+"""Side-by-side comparison of base model vs adapter-enhanced output."""
+
 import torch
-from transformers import (
-    AutoModelForCausalLM,
-    AutoTokenizer,
-    BitsAndBytesConfig,
-)
-from peft import PeftModel
 
-model_name = "microsoft/phi-2"
-adapter_path = "adapters/general_adapter"
+from src.config import DEFAULT_ADAPTER
+from src.model import load_adapter, load_base_model, load_tokenizer
 
-quant_config = BitsAndBytesConfig(
-    load_in_4bit=True,
-    bnb_4bit_compute_dtype=torch.float16,
-    bnb_4bit_use_double_quant=True,
-    bnb_4bit_quant_type="nf4",
-)
+adapter_path = str(DEFAULT_ADAPTER)
 
-tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
-tokenizer.pad_token = tokenizer.eos_token
-
-base = AutoModelForCausalLM.from_pretrained(
-    model_name,
-    quantization_config=quant_config,
-    device_map="auto",
-    trust_remote_code=True,
-)
-
-model = PeftModel.from_pretrained(base, adapter_path)
+tokenizer = load_tokenizer()
+base = load_base_model()
+model = load_adapter(base, adapter_path)
 
 prompts = [
     "Explain the difference between gradient descent and stochastic gradient descent.",
@@ -59,6 +42,6 @@ for name, enabled in [("WITHOUT adapter", False), ("WITH adapter", True)]:
             )
         result = tokenizer.decode(outputs[0], skip_special_tokens=True)
         print(f"\nPrompt: {prompt}")
-        print(f"---")
+        print("---")
         print(result)
         print()
